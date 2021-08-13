@@ -1,0 +1,7 @@
+
+###用户列表
+GET http://localhost:8021/v1/user/list
+Accept: application/json
+
+###
+
