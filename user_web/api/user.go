@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -12,6 +13,8 @@ import (
 	"hcshop-api/user_web/forms"
 	"hcshop-api/user_web/global"
 	"hcshop-api/user_web/global/response"
+	"hcshop-api/user_web/middlewares"
+	"hcshop-api/user_web/models"
 	"hcshop-api/user_web/proto"
 	"net/http"
 	"strconv"
@@ -65,6 +68,10 @@ func GetUserList(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Errorw("[GetUserList] 连接 【用户服务失败】", "msg", err.Error())
 	}
+	claims, _ := ctx.Get("claims")
+	currentUser := claims.(*models.CustomClaims)
+	zap.S().Infof("访问用：%d", currentUser.ID)
+
 	userClient := proto.NewUserClient(conn)
 	pn := ctx.DefaultQuery("pn", "0")
 	pnInt, _ := strconv.Atoi(pn)
@@ -108,4 +115,71 @@ func PassWordLogin(ctx *gin.Context) {
 		HandleValidatorErr(ctx, err)
 		return
 	}
+
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
+	if err != nil {
+		zap.S().Errorw("[GetUserList] 连接 【用户服务失败】", "msg", err.Error())
+	}
+	userClient := proto.NewUserClient(conn)
+
+	if resp, err := userClient.GetUserByMobile(context.Background(), &proto.MobileRequest{
+		Mobile: passwordLoginForm.Mobile,
+	}); err != nil {
+		if e, ok := status.FromError(err); ok {
+			switch e.Code() {
+			case codes.NotFound:
+				ctx.JSON(http.StatusBadRequest, gin.H{
+					"msg": "用户不存在",
+				})
+			default:
+				ctx.JSON(http.StatusInternalServerError, gin.H{
+					"msg": "登录失败",
+				})
+			}
+			return
+		}
+	} else {
+		if pwd_rsp, err := userClient.CheckPassword(context.Background(), &proto.PasswordCheckInfo{
+			Password:          passwordLoginForm.Password,
+			EncryptedPassword: resp.Password,
+		}); err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"msg": "登录失败",
+			})
+		} else {
+			if pwd_rsp.Success {
+				// 这里要生成token
+				j := middlewares.NewJWT()
+				claims := models.CustomClaims{
+					ID:          uint(resp.Id),
+					NickName:    resp.Nickname,
+					AuthorityId: uint(resp.Role),
+					StandardClaims: jwt.StandardClaims{
+						NotBefore: time.Now().Unix(), // 签名生效时间
+						ExpiresAt: time.Now().Unix() + 60*60*24*30,
+						Issuer:    "hecv",
+					},
+				}
+
+				token, err := j.CreateToken(claims)
+				if err != nil {
+					ctx.JSON(http.StatusInternalServerError, gin.H{
+						"msg": "生成token失败",
+					})
+					return
+				}
+				ctx.JSON(http.StatusOK, gin.H{
+					"token":      token,
+					"id":         resp.Id,
+					"nickname":   resp.Nickname,
+					"expired_at": (time.Now().Unix() + 60*60*24*30) * 1000,
+				})
+			} else {
+				ctx.JSON(http.StatusBadRequest, gin.H{
+					"msg": "登录失败",
+				})
+			}
+		}
+	}
+
 }

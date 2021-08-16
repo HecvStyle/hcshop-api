@@ -2,8 +2,8 @@ POST http://localhost:8021/v1/user/pwd_login
 Content-Type: application/json
 
 {
-  "mobile":"1878222222",
-  "password": "22222"
+  "mobile":"18782222222",
+  "password": "admin123"
 }
 
 ###
@@ -11,6 +11,7 @@ Content-Type: application/json
 ###用户列表
 GET http://localhost:8021/v1/user/list?pn=2&psize=3
 Accept: application/json
+x-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MzMsIk5pY2tOYW1lIjoiYm9iYnkyIiwiQXV0aG9yaXR5SWQiOjEsImV4cCI6MTYzMTcxNTY3MiwiaXNzIjoiaGVjdiIsIm5iZiI6MTYyOTEyMzY3Mn0.iHNsqbYxToXP1zy0lFbWodp3grbhTai9_srFGL_cg8s
 
 ###
 
