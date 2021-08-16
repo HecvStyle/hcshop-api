@@ -4,13 +4,18 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"hcshop-api/user_web/forms"
+	"hcshop-api/user_web/global"
 	"hcshop-api/user_web/global/response"
 	"hcshop-api/user_web/proto"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -44,18 +49,30 @@ func HandlerGrpcErrorToHttp(err error, c *gin.Context) {
 	}
 }
 
+func HandleValidatorErr(ctx *gin.Context, err error) {
+	errs, ok := err.(validator.ValidationErrors)
+	if !ok {
+		ctx.JSON(http.StatusOK, gin.H{
+			"msg": err.Error(),
+		})
+	}
+	ctx.JSON(http.StatusBadRequest, gin.H{
+		"error": removeTopStruct(errs.Translate(global.Trans)),
+	})
+}
 func GetUserList(ctx *gin.Context) {
-	ip := "127.0.0.1"
-	port := 50051
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", ip, port), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
 	if err != nil {
 		zap.S().Errorw("[GetUserList] 连接 【用户服务失败】", "msg", err.Error())
 	}
 	userClient := proto.NewUserClient(conn)
-
+	pn := ctx.DefaultQuery("pn", "0")
+	pnInt, _ := strconv.Atoi(pn)
+	pSize := ctx.DefaultQuery("psize", "10")
+	pSizeInt, _ := strconv.Atoi(pSize)
 	rsp, err := userClient.GetUserList(context.Background(), &proto.PageInfo{
-		Pn:    1,
-		PSize: 10,
+		Pn:    uint32(pnInt),
+		PSize: uint32(pSizeInt),
 	})
 	if err != nil {
 		zap.S().Errorw("[GetUserList] 查询 【用户列表】失败")
@@ -75,5 +92,20 @@ func GetUserList(ctx *gin.Context) {
 		result = append(result, data)
 	}
 	ctx.JSON(http.StatusOK, result)
+}
 
+func removeTopStruct(fields map[string]string) map[string]string {
+	rsp := map[string]string{}
+	for field, err := range fields {
+		rsp[field[strings.Index(field, ".")+1:]] = err
+	}
+	return rsp
+}
+
+func PassWordLogin(ctx *gin.Context) {
+	passwordLoginForm := forms.PasswordLoginForm{}
+	if err := ctx.ShouldBind(&passwordLoginForm); err != nil {
+		HandleValidatorErr(ctx, err)
+		return
+	}
 }
