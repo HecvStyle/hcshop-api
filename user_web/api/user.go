@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -187,4 +188,80 @@ func PassWordLogin(ctx *gin.Context) {
 			}
 		}
 	}
+}
+
+func Register(ctx *gin.Context) {
+	registerForm := forms.RegisterForm{}
+	if err := ctx.ShouldBind(&registerForm); err != nil {
+		HandleValidatorErr(ctx, err)
+		return
+	}
+
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%d", global.ServerConfig.RedisInfo.Host, global.ServerConfig.RedisInfo.Port),
+		Password: global.ServerConfig.RedisInfo.Password,
+		DB:       0,
+	})
+	val, err := rdb.Get(ctx, registerForm.Mobile).Result()
+	if err == redis.Nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"sms_code": "验证码错误",
+		})
+		return
+	}
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg": "链接redis错误",
+		})
+		return
+	}
+
+	if val != registerForm.SmsCode {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"sms_code": "验证码错误",
+		})
+		return
+	}
+
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
+	if err != nil {
+		zap.S().Errorw("[Register] 连接 【用户服务失败】", "msg", err.Error())
+		return
+	}
+	userClient := proto.NewUserClient(conn)
+	user, err := userClient.CreateUser(context.Background(), &proto.CreateUserInfo{
+		Mobile:   registerForm.Mobile,
+		Password: registerForm.Password,
+		Nickname: registerForm.Nickname,
+	})
+	if err != nil {
+		zap.S().Errorw("[Register] 【注册用户服务】", "msg", err.Error())
+		HandlerGrpcErrorToHttp(err, ctx)
+		return
+	}
+
+	j := middlewares.NewJWT()
+	claims := models.CustomClaims{
+		ID:          uint(user.Id),
+		NickName:    user.Nickname,
+		AuthorityId: uint(user.Role),
+		StandardClaims: jwt.StandardClaims{
+			NotBefore: time.Now().Unix(), // 签名生效时间
+			ExpiresAt: time.Now().Unix() + 60*60*24*30,
+			Issuer:    "hecv",
+		},
+	}
+	token, err := j.CreateToken(claims)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError,gin.H{
+			"msg":"生产token失败",
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK,gin.H{
+		"id":user.Id,
+		"nickname":user.Nickname,
+		"token":token,
+		"expired_at":(time.Now().Unix() + 60*60*24*30) * 1000,
+	})
 }
