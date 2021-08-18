@@ -7,7 +7,10 @@ Content-Type: application/json
 
 {
   "mobile": "18782222222",
-  "password": "admin123"
+  "password": "admin123",
+  "captcha_id": "SNFh6dZKFbbS1EmyCnqf",
+  "captcha": "65080"
+
 }
 
 ###
@@ -18,4 +21,10 @@ Accept: application/json
 x-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MzMsIk5pY2tOYW1lIjoiYm9iYnkyIiwiQXV0aG9yaXR5SWQiOjEsImV4cCI6MTYzMTcxNTY3MiwiaXNzIjoiaGVjdiIsIm5iZiI6MTYyOTEyMzY3Mn0.iHNsqbYxToXP1zy0lFbWodp3grbhTai9_srFGL_cg8s
 
 ###
+POST http://localhost:8021/u/v1/base/sendSms
+Content-Type: application/json
 
+{
+  "mobile": "18782222222",
+  "type": 1
+}

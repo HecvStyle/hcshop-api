@@ -115,10 +115,16 @@ func PassWordLogin(ctx *gin.Context) {
 		HandleValidatorErr(ctx, err)
 		return
 	}
-
+	if !store.Verify(passwordLoginForm.CaptchaId, passwordLoginForm.Captcha, true) {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"captcha": "验证码错误",
+		})
+		return
+	}
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
 	if err != nil {
 		zap.S().Errorw("[GetUserList] 连接 【用户服务失败】", "msg", err.Error())
+		return
 	}
 	userClient := proto.NewUserClient(conn)
 
@@ -181,5 +187,4 @@ func PassWordLogin(ctx *gin.Context) {
 			}
 		}
 	}
-
 }

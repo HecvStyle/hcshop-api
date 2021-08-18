@@ -5,3 +5,12 @@ user_srv:
   port: 50051
 jwt:
   key: 'signkey'
+
+redis:
+     host: '127.0.0.1'
+     port: 7379
+     password: 'hecvvceh'
+
+sms:
+    key: ''
+    secret: ''
