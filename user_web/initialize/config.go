@@ -2,10 +2,11 @@ package initialize
 
 import (
 	"fmt"
+	"hcshop-api/user_web/global"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"hcshop-api/user_web/global"
 )
 
 func GetEnvInfo(env string) bool {
@@ -18,9 +19,9 @@ func InitConfig() {
 	// ！！！需要自己配置本地环境变量 HCSHOP_DEBUG ！！！
 	debug := GetEnvInfo("HCSHOP_DEBUG")
 	configFilePrefix := "config"
-	configName := fmt.Sprintf("user_web/%s-pro.yaml", configFilePrefix)
+	configName := fmt.Sprintf("%s-pro.yaml", configFilePrefix)
 	if debug {
-		configName = fmt.Sprintf("user_web/%s-debug.yaml", configFilePrefix)
+		configName = fmt.Sprintf("%s-debug.yaml", configFilePrefix)
 	}
 	v := viper.New()
 	v.SetConfigFile(configName)
