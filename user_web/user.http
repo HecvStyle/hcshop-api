@@ -9,15 +9,15 @@ Content-Type: application/json
 {
   "mobile": "18782222222",
   "password": "admin123",
-  "captcha_id": "SNFh6dZKFbbS1EmyCnqf",
-  "captcha": "65080"
+  "captcha_id": "gjuGQB6g28ybXOhdNkfm",
+  "captcha": "92883"
 }
 
 
 ### 用户列表
 GET http://localhost:8021/u/v1/user/list?pn=2&psize=3
 Accept: application/json
-x-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MzMsIk5pY2tOYW1lIjoiYm9iYnkyIiwiQXV0aG9yaXR5SWQiOjEsImV4cCI6MTYzMTcxNTY3MiwiaXNzIjoiaGVjdiIsIm5iZiI6MTYyOTEyMzY3Mn0.iHNsqbYxToXP1zy0lFbWodp3grbhTai9_srFGL_cg8s
+x-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MywiTmlja05hbWUiOiJib2JieTIiLCJBdXRob3JpdHlJZCI6MiwiZXhwIjoxNjMxOTU4MTU2LCJpc3MiOiJoZWN2IiwibmJmIjoxNjI5MzY2MTU2fQ.HHJ4zEoCzoHAzu6NZCkZbjxlLTSlphRzCEdUq8ffjbA
 
 ### 发送短息验证码
 POST http://localhost:8021/u/v1/base/sendSms

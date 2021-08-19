@@ -18,6 +18,9 @@ func main() {
 
 	initialize.InitConfig()
 
+	// 用户服务初始化
+	initialize.InitSrvConn()
+
 	// 路由初始化
 	Router := initialize.Routers()
 

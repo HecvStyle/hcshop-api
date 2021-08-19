@@ -69,20 +69,16 @@ func HandleValidatorErr(ctx *gin.Context, err error) {
 	})
 }
 func GetUserList(ctx *gin.Context) {
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
-	if err != nil {
-		zap.S().Errorw("[GetUserList] 连接 【用户服务失败】", "msg", err.Error())
-	}
+
 	claims, _ := ctx.Get("claims")
 	currentUser := claims.(*models.CustomClaims)
 	zap.S().Infof("访问用：%d", currentUser.ID)
 
-	userClient := proto.NewUserClient(conn)
 	pn := ctx.DefaultQuery("pn", "0")
 	pnInt, _ := strconv.Atoi(pn)
 	pSize := ctx.DefaultQuery("psize", "10")
 	pSizeInt, _ := strconv.Atoi(pSize)
-	rsp, err := userClient.GetUserList(context.Background(), &proto.PageInfo{
+	rsp, err := global.UserSrvClient.GetUserList(context.Background(), &proto.PageInfo{
 		Pn:    uint32(pnInt),
 		PSize: uint32(pSizeInt),
 	})
@@ -257,16 +253,16 @@ func Register(ctx *gin.Context) {
 	}
 	token, err := j.CreateToken(claims)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError,gin.H{
-			"msg":"生产token失败",
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"msg": "生产token失败",
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK,gin.H{
-		"id":user.Id,
-		"nickname":user.Nickname,
-		"token":token,
-		"expired_at":(time.Now().Unix() + 60*60*24*30) * 1000,
+	ctx.JSON(http.StatusOK, gin.H{
+		"id":         user.Id,
+		"nickname":   user.Nickname,
+		"token":      token,
+		"expired_at": (time.Now().Unix() + 60*60*24*30) * 1000,
 	})
 	return
 }
