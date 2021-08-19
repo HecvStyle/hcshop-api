@@ -1,0 +1,22 @@
+
+### 服务注册
+PUT http://127.0.0.1:8500/v1/agent/service/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "Name": "hcshop-web",
+  "ID": "hcshop-web",
+  "Tags": ["web"],
+  "Address": "127.0.0.1",
+  "Port": 50051
+}
+
+### 服务注销
+
+
+PUT http://127.0.0.1:8500/v1/agent/service/deregister/hcshop-web
+Accept: application/json
+Content-Type: application/json
+
+

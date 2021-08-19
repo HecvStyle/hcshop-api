@@ -1,7 +1,8 @@
+### 获取验证码
 GET http://localhost:8021/u/v1/base/captcha
 Accept: application/json
 
-###
+### 登陆
 POST http://localhost:8021/u/v1/user/pwd_login
 Content-Type: application/json
 
@@ -10,21 +11,30 @@ Content-Type: application/json
   "password": "admin123",
   "captcha_id": "SNFh6dZKFbbS1EmyCnqf",
   "captcha": "65080"
-
 }
 
-###
 
-###用户列表
+### 用户列表
 GET http://localhost:8021/u/v1/user/list?pn=2&psize=3
 Accept: application/json
 x-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MzMsIk5pY2tOYW1lIjoiYm9iYnkyIiwiQXV0aG9yaXR5SWQiOjEsImV4cCI6MTYzMTcxNTY3MiwiaXNzIjoiaGVjdiIsIm5iZiI6MTYyOTEyMzY3Mn0.iHNsqbYxToXP1zy0lFbWodp3grbhTai9_srFGL_cg8s
 
-###
+### 发送短息验证码
 POST http://localhost:8021/u/v1/base/sendSms
 Content-Type: application/json
 
 {
-  "mobile": "18782222222",
+  "mobile": "17707418691",
   "type": 1
+}
+
+### 注册
+POST http://localhost:8021/u/v1/user/register
+Content-Type: application/json
+
+{
+  "nickname": "hecv",
+  "mobile": "17707418691",
+  "password": "admin123",
+  "sms_code": "000691"
 }

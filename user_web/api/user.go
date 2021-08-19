@@ -43,6 +43,10 @@ func HandlerGrpcErrorToHttp(err error, c *gin.Context) {
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"msg": "用户服务不可用",
 				})
+			case codes.AlreadyExists:
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"msg": "用户已存在",
+				})
 			default:
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"msg": e.Code(),
@@ -264,4 +268,5 @@ func Register(ctx *gin.Context) {
 		"token":token,
 		"expired_at":(time.Now().Unix() + 60*60*24*30) * 1000,
 	})
+	return
 }
