@@ -19,5 +19,5 @@ sms:
     expire: 5
 
 consul:
-      host: '127.0.0.1'
+      host: '192.168.1.175'
       port: 8500

@@ -5,9 +5,11 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"hcshop-api/user_web/global"
 	"hcshop-api/user_web/initialize"
+	"hcshop-api/user_web/utils"
 	vl "hcshop-api/user_web/validator"
 )
 
@@ -26,6 +28,16 @@ func main() {
 
 	if err := initialize.InitTrans("zh"); err != nil {
 		panic(err)
+	}
+
+	viper.AutomaticEnv()
+	debug := viper.GetBool("HCSHOP_DEBUG")
+	// 线上环境，动态生成端口
+	if !debug {
+		port, err := utils.GetFreePort()
+		if err == nil {
+			global.ServerConfig.Port = port
+		}
 	}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

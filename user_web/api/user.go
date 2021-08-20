@@ -8,7 +8,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"hcshop-api/user_web/forms"
@@ -122,14 +121,8 @@ func PassWordLogin(ctx *gin.Context) {
 		})
 		return
 	}
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
-	if err != nil {
-		zap.S().Errorw("[GetUserList] 连接 【用户服务失败】", "msg", err.Error())
-		return
-	}
-	userClient := proto.NewUserClient(conn)
 
-	if resp, err := userClient.GetUserByMobile(context.Background(), &proto.MobileRequest{
+	if resp, err := global.UserSrvClient.GetUserByMobile(context.Background(), &proto.MobileRequest{
 		Mobile: passwordLoginForm.Mobile,
 	}); err != nil {
 		if e, ok := status.FromError(err); ok {
@@ -146,7 +139,7 @@ func PassWordLogin(ctx *gin.Context) {
 			return
 		}
 	} else {
-		if pwd_rsp, err := userClient.CheckPassword(context.Background(), &proto.PasswordCheckInfo{
+		if pwd_rsp, err := global.UserSrvClient.CheckPassword(context.Background(), &proto.PasswordCheckInfo{
 			Password:          passwordLoginForm.Password,
 			EncryptedPassword: resp.Password,
 		}); err != nil {
@@ -223,13 +216,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSrvInfo.Host, global.ServerConfig.UserSrvInfo.Port), grpc.WithInsecure())
-	if err != nil {
-		zap.S().Errorw("[Register] 连接 【用户服务失败】", "msg", err.Error())
-		return
-	}
-	userClient := proto.NewUserClient(conn)
-	user, err := userClient.CreateUser(context.Background(), &proto.CreateUserInfo{
+	user, err := global.UserSrvClient.CreateUser(context.Background(), &proto.CreateUserInfo{
 		Mobile:   registerForm.Mobile,
 		Password: registerForm.Password,
 		Nickname: registerForm.Nickname,
