@@ -43,7 +43,7 @@ func InitConfig() {
 		zap.S().Infof("配置文件发生:%s", e.Name)
 		_ = v.ReadInConfig()
 		_ = v.Unmarshal(global.NacosConfig)
-		zap.S().Infof("配置信息：%v", global.ServerConfig)
+		zap.S().Infof("配置信息：%v", global.NacosConfig)
 	})
 
 	serverConfigs := []constant.ServerConfig{
