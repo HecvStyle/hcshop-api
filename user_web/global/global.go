@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	Trans        ut.Translator
-	ServerConfig = &config.ServerConfig{}
-
+	Trans         ut.Translator
+	ServerConfig  = &config.ServerConfig{}
+	NacosConfig   = &config.NacosConfig{}
 	UserSrvClient proto.UserClient
 )

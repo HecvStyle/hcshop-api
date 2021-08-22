@@ -38,6 +38,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/nacos-group/nacos-sdk-go v1.0.8
 	github.com/pelletier/go-toml v1.9.3 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -54,14 +55,21 @@ require (
 )
 
 require (
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
 	github.com/armon/go-metrics v0.3.2 // indirect
+	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23 // indirect
+	github.com/go-errors/errors v1.0.1 // indirect
 	github.com/go-playground/form v3.1.4+incompatible // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-immutable-radix v1.1.0 // indirect
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/serf v0.8.5 // indirect
+	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
+	github.com/lestrrat/go-file-rotatelogs v0.0.0-20180223000712-d3151e2a480f // indirect
+	github.com/lestrrat/go-strftime v0.0.0-20180220042222-ba3bf9c1d042 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/toolkits/concurrent v0.0.0-20150624120057-a4371d70e3e3 // indirect
 )
