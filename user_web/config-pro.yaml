@@ -1,7 +1,0 @@
-host: '192.168.1.75'
-port: 8848
-Namespace: '70f9bb45-bbc4-4408-802c-2b3d2f2c8b0f'
-user: 'nacos'
-password: 'nacos'
-dataid: 'user-web.json'
-Group: 'dev'

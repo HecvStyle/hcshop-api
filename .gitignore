@@ -73,3 +73,6 @@ fabric.properties
 
 .idea
 
+/user_web/config-debug.yaml
+/user_web/config-pro.yaml
+/tmp/
