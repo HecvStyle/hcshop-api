@@ -1,7 +1,7 @@
 host: '116.62.189.28'
 port: 8848
-Namespace: 'b9b42c3e-51cf-4d1c-8140-0383d15f04bc'
+Namespace: '87b1dad9-33ef-436c-a19c-869f64d73944'
 user: 'nacos'
 password: 'mEnmyz-5magjo-feztub'
-dataid: 'user-web.json'
+dataid: 'goods-web.json'
 Group: 'dev'
