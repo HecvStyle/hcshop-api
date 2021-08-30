@@ -29,6 +29,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.3
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/hashicorp/consul/api v1.3.0
+	github.com/hashicorp/go-uuid v1.0.1
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
