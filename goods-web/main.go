@@ -10,7 +10,11 @@ import (
 	"hcshop-api/goods-web/global"
 	"hcshop-api/goods-web/initialize"
 	"hcshop-api/goods-web/utils"
+	"hcshop-api/goods-web/utils/consul"
 	vl "hcshop-api/user_web/validator"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -49,9 +53,24 @@ func main() {
 			return t
 		})
 	}
+	registerClient := consul.NewRegisterClient(global.ServerConfig.ConsulInfo.Host, global.ServerConfig.ConsulInfo.Port)
+	serviceId, err := registerClient.RegisterService(global.ServerConfig.Host, global.ServerConfig.Name, global.ServerConfig.Port, global.ServerConfig.Tags)
 
 	zap.S().Infof("启动服务,端口%d", global.ServerConfig.Port)
-	if err := Router.Run(fmt.Sprintf(":%d", global.ServerConfig.Port)); err != nil {
-		zap.S().Panic("启动失败:", err.Error())
+
+	go func() {
+		if err := Router.Run(fmt.Sprintf(":%d", global.ServerConfig.Port)); err != nil {
+			zap.S().Panic("启动失败:", err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	if err = registerClient.DeRegisterService(serviceId); err != nil {
+		zap.S().Info("商品web服务注销失败")
+		panic(err)
 	}
+	zap.S().Info("注销成功")
+
 }
