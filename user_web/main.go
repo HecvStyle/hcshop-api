@@ -70,7 +70,6 @@ func main() {
 	<-quit
 	if err = registerClient.DeRegisterService(serviceId); err != nil {
 		zap.S().Info("用户web服务注销失败")
-		panic(err)
 	}
 	zap.S().Info("注销成功")
 
