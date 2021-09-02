@@ -1,8 +1,0 @@
-
-
-
-### 用户列表
-GET http://localhost:8021/u/v1/user/list?pn=2&psize=3
-Accept: application/json
-x-token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6MywiTmlja05hbWUiOiJib2JieTIiLCJBdXRob3JpdHlJZCI6MiwiZXhwIjoxNjMxOTU4MTU2LCJpc3MiOiJoZWN2IiwibmJmIjoxNjI5MzY2MTU2fQ.HHJ4zEoCzoHAzu6NZCkZbjxlLTSlphRzCEdUq8ffjbA
-

@@ -1,0 +1,65 @@
+GET http://localhost:80/api/item?id=99
+Accept: application/json
+
+###
+
+
+
+
+###
+# POST   /g/v1/goods
+# GET    /g/v1/goods/:id
+# DELETE /g/v1/goods/:id
+# GET    /g/v1/goods/:id/stocks
+# PUT    /g/v1/goods/:id
+# PATCH  /g/v1/goods/:id
+
+GET http://localhost:8022/g/v1/goods
+Accept: application/json
+
+###
+# GET    /g/v1/categorys
+# DELETE /g/v1/categorys/:id
+# GET    /g/v1/categorys/:id
+# POST   /g/v1/categorys
+# PUT    /g/v1/categorys/:id
+GET http://localhost:8022/g/v1/categorys/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "二级品类2",
+  "parent": 1,
+  "level": 2,
+  "is_tab": false,
+
+  "id": 1,
+  "level": 2
+
+}
+
+###
+# GET    /g/v1/banner
+# POST   /g/v1/banner
+# DELETE /g/v1/banner/:id
+# PUT    /g/v1/banner/:id
+GET http://localhost:8022/g/v1/banner
+
+
+
+####
+# GET    /g/v1/brands
+# DELETE /g/v1/brands/:id
+# POST   /g/v1/brands
+# PUT    /g/v1/brands/:id
+# GET    /g/v1/categorybrands
+# DELETE /g/v1/categorybrands/:id
+# POST   /g/v1/categorybrands
+# PUT    /g/v1/categorybrands/:id
+# GET    /g/v1/categorybrands/:id
+GET http://localhost:8022/g/v1/brands
+Accept: application/json
+
+
+
+
