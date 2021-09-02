@@ -52,4 +52,17 @@ web端实现
 
 1. 接着前一天的工作，完成了nacos配置文件的读取，原来的配置文件转换成了json全部都写入了nacos 配置中心里，所以本地的配置文件，就只有nacos的配置信息了
 2. 因为goland编译工作目录设置为了user_web,所以我将日志文件设置为了工作环境目录的上一层，也就是根目录，但是这可能在正式环境打包时候有坑，所以之后会考虑使用配置文件来区分开发和正式环境，方便统一管理配置文件的缓存
+
+# 8月23
+1. 刚更新配置文件处理，配置信息使用nacos获取，项目中，不再提供配置文件，可以自己在对应工作目录创建名为 config-debug.yaml 和config-pro.yaml 文件配置内容为nacos的信息。
+格式： 
+```
+host: '192.168.1.75' // nacos 服务地址
+port: 8848
+Namespace: 'x x x x' // 配置文件的命名
+user: 'nacos'  // nacos 登陆用户名
+password: 'nacos'  // nacos 登陆用户密码
+dataid: 'user-web.json' // 配置文件名
+Group: 'dev' // 配置文件所在分组
+```
  
