@@ -16,6 +16,23 @@ Accept: application/json
 
 GET http://localhost:8022/g/v1/goods
 Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "商品名字",
+  "goods_sn": "111",
+  "stocks": 111,
+  "category": 6,
+  "market_price": 111,
+  "shop_price": 11.1,
+  "goods_brief": "商品描述",
+  "images": ["https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/512px-Xiaomi_logo_%282021-%29.svg.png"],
+  "desc_images": ["https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/512px-Xiaomi_logo_%282021-%29.svg.png"],
+  "ship_free": true,
+  "front_image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/512px-Xiaomi_logo_%282021-%29.svg.png",
+  "brand": 6
+}
+
 
 ###
 # GET    /g/v1/categorys
@@ -23,19 +40,17 @@ Accept: application/json
 # GET    /g/v1/categorys/:id
 # POST   /g/v1/categorys
 # PUT    /g/v1/categorys/:id
-GET http://localhost:8022/g/v1/categorys/1
+GET http://localhost:8022/g/v1/categorys
 Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "二级品类2",
-  "parent": 1,
-  "level": 2,
+  "name": "三级品类2",
+  "parent": 3,
+  "level": 3,
   "is_tab": false,
-
   "id": 1,
   "level": 2
-
 }
 
 ###
@@ -57,9 +72,14 @@ GET http://localhost:8022/g/v1/banner
 # POST   /g/v1/categorybrands
 # PUT    /g/v1/categorybrands/:id
 # GET    /g/v1/categorybrands/:id
-GET http://localhost:8022/g/v1/brands
+POST http://localhost:8022/g/v1/categorybrands
 Accept: application/json
+Content-Type: application/json
 
+{
+  "category_id": 6,
+  "brand_id": 6
+}
 
 
 
